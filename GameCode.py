@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Welcome to M'Sweeper
 Created on Wed Jan 9 21:20:37 2019
