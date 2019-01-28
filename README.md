@@ -1,4 +1,9 @@
-# STACK1E
+#CSc Project 2018-19
+Made By:
+Dhruv Jain
+Aman Thukral
+Vaibhav Agarwal
+
 Make sure to have the pygame library installed on the system.
 
 ### Installation
