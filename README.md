@@ -16,5 +16,5 @@ py -m pip install -U pygame --user
 Use CMD to run the game.
 First cd to the game folder, and then run the following.
 ```
-python main.py
+python menu.py
 ```
