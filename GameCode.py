@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Welcome to the Matrix
-
-Created on Wed Jan  9 21:20:37 2019
-
+Welcome to M'Sweeper
+Created on Wed Jan 9 21:20:37 2019
 @author: Aman Thukral
 """
 #------------------------------------------------------------------------------
@@ -71,10 +69,15 @@ while inputBounds:
   yVal=int(input("No. of rows:"))
   if xVal<3 or yVal<3:
     print("Grid too small")
-  elif xVal>12 or yVal>12:
+  elif xVal>11 or yVal>11:
     print("Grid too big")
   else:
     inputBounds=False
+
+bombDividend=6
+mode=input("Difficulty - Easy[E] or Hard[H]?:").upper()
+if mode=='H':
+  bombDividend=5
 
 dispStruct=[]
 realStruct=[]
@@ -90,7 +93,7 @@ for i in range(yVal):
 #------------------------------------------------------------------------------
 
 bDone=[]
-nBomb=(xVal*yVal)//6
+nBomb=(xVal*yVal)//bombDividend
 
 while(len(bDone)!=nBomb):
   xBomb=random.randint(0,xVal-1)
@@ -296,6 +299,8 @@ def gameloop():
             if counter==nBomb:
               dispStruct1=realStruct
               gameWin()
+          else:
+            counter=0
     
     cursor(cursor_x,cursor_y)
     
