@@ -8,4 +8,5 @@ if game==1:
     import main
 if game==2:
     import TheekThaakToe
-#if game==3:
+if game==3:
+    import GameCode
