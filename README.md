@@ -1,8 +1,8 @@
 # C.Sc. Project 2018-19
 Made By:
--Dhruv Jain
--Aman Thukral
--Vaibhav Agarwal
+- Dhruv Jain
+- Aman Thukral
+- Vaibhav Agarwal
 
 Make sure to have the pygame library installed on the system.
 
