@@ -44,8 +44,8 @@ def newblanks(l1,l2):
 
 def crosslist(m1,x):
   finalx=[]
-  for i in x:
-    finalx.append(i)
+  for q in x:
+    finalx.append(q)
   for i in x:
      for j in add[0:4]:
        try:
@@ -59,42 +59,31 @@ def crosslist(m1,x):
   
   return finalx
 
-'''
-def plus(m2,yx):
-  final=[yx]
-  t3=copy.deepcopy(final)
-  while len(t3)!=0:
-    g=crosslist(m2,t3)
-    for k in g:
-      if k not in final:
-        final.append(k)
-    t3=newblanks(g,t3)
-    for k in t3:
-      if m2[k[0]][k[1]]!=0:
-        t3.remove(k)
-  
-  return final
-'''
 #------------------------------------------------------------------------------
 # INPUTS + FORMATION OF DISPLAY STRUCTURE
 #------------------------------------------------------------------------------
 
 xVal=yVal=0
 
-while((xVal*yVal)<6):
+inputBounds=True
+while inputBounds:
   xVal=int(input("No. of columns:"))
   yVal=int(input("No. of rows:"))
-  if(xVal*yVal<6):
+  if xVal<3 or yVal<3:
     print("Grid too small")
+  elif xVal>12 or yVal>12:
+    print("Grid too big")
+  else:
+    inputBounds=False
 
 dispStruct=[]
-
+realStruct=[]
 for i in range(yVal):
   dispStruct.append([])
+  realStruct.append([])
   for j in range(xVal):
-    dispStruct[i].append(0)
-
-realStruct=copy.deepcopy(dispStruct)
+    dispStruct[i].append('untouched')
+    realStruct[i].append(0)
 
 #------------------------------------------------------------------------------
 # BOMBS + CHECKERS + FORMATION OF REAL STRUCTURE + BLANK GROUPING
@@ -112,34 +101,24 @@ while(len(bDone)!=nBomb):
     bDone.append(tBombCurrent)
     realStruct=check(realStruct,tBombCurrent)
 
-groupBlanks=[]
-blanksOpen=[]
+blanks=[]
 for i in range(yVal):
   for j in range(xVal):
-    if (i,j) not in blanksOpen and value(realStruct,i,j)==0:
-      origin=[(i,j)]
-      loopList=[(i,j)]
-      loopExit=False
-      while(not loopExit):
-        crossed=crosslist(realStruct,origin)
-        checker=copy.deepcopy(origin)
-        origin=newblanks(crossed,origin)
-        loopList.extend(origin)
-        for k in origin:
-          d=value(realStruct,k[0],k[1])
-          if d!=0 or d in loopList or d in blanksOpen:
-            origin.remove(k)
-        if origin==checker:
-          loopExit=True
-      groupBlanks.append(loopList)
-      blanksOpen.extend(loopList)
+    if value(realStruct,i,j)==0:
+      crossed=crosslist(realStruct,[(i,j)])
+      for k in blanks:
+        if (i,j) in k:
+          k.extend(newblanks(crossed,k))
+          break
+        else:
+          continue
+      else:
+        blanks.append(crossed)
 
-matprint(realStruct)
-print(groupBlanks)
 #------------------------------------------------------------------------------
 # DISPLAY + INTERFACE
 #------------------------------------------------------------------------------
-'''
+
 pygame.init()
 spaceTop=80
 thickness=10
@@ -154,6 +133,21 @@ gHeight=(yVal*(cellSide+thickness))+spaceTop+thickness
 cursorImg=pygame.image.load('cursor.png')
 cursorWidth=80
 
+greyImg=pygame.image.load('grey.png')
+oneImg=pygame.image.load('one.png')
+twoImg=pygame.image.load('two.png')
+threeImg=pygame.image.load('three.png')
+fourImg=pygame.image.load('four.png')
+fiveImg=pygame.image.load('five.png')
+sixImg=pygame.image.load('six.png')
+sevenImg=pygame.image.load('seven.png')
+eightImg=pygame.image.load('eight.png')
+
+bombImg=pygame.image.load('bomb.png')
+flagImg=pygame.image.load('flag.png')
+
+imgDict={0:greyImg,1:oneImg,2:twoImg,3:threeImg,4:fourImg,5:fiveImg,6:sixImg,7:sevenImg,8:eightImg,'*':bombImg,'F':flagImg}
+
 gameDisp=pygame.display.set_mode((gWidth,gHeight))
 pygame.display.set_caption("M'sweeper")
 clock=pygame.time.Clock()
@@ -165,17 +159,23 @@ green=(0,255,0)
 blue=(0,0,255)
 grey=(130,130,130)
 
+def coordx(x):
+  return x*(cellSide+thickness)
+
+def coordy(y):
+  return y*(cellSide+thickness)+spaceTop
+
 def cursor(x,y):
   gameDisp.blit(cursorImg,(x,y))
 
 def text_objects(text,font):
-  textSurface=font.render(text,True,black)
+  textSurface=font.render(text,True,white)
   return textSurface, textSurface.get_rect()
 
-def message_display(text):
-  largeText=pygame.font.Font('freesansbold.ttf',115)
+def message_display(text,f):
+  largeText=pygame.font.Font(f,60)
   TextSurf, TextRect = text_objects(text,largeText)
-  TextRect.center = ((gWidth/2),(gHeight/2))
+  TextRect.center = ((gWidth/2),40)
   gameDisp.blit(TextSurf,TextRect)
   
   pygame.display.update()
@@ -186,6 +186,8 @@ def cellx():
   xTile=math.floor((mouse_x-(thickness/2))/(cellSide+thickness))
   if xTile+1>xVal:
     xTile=xVal-1
+  elif xTile+1<1:
+    xTile=0
   return xTile
 
 def celly():
@@ -198,12 +200,27 @@ def celly():
     yTile=0
   return yTile
 
-def gameintro():
-  pass
+def bomb():
+  pygame.draw.rect(gameDisp,black,[0,0,gWidth,spaceTop])
+  message_display("BOOM!",'BeforeCollapse.ttf')
+  time.sleep(3)
+  
+  pygame.quit()
+  quit()
+
+def gameWin():
+  pygame.draw.rect(gameDisp,black,[0,0,gWidth,spaceTop])
+  message_display("YOU WON!",'BradyBunch.ttf')
+  time.sleep(3)
+  
+  pygame.quit()
+  quit()
 
 def gameloop():
   
   gameExit=False
+  
+  dispStruct1=copy.deepcopy(dispStruct)
   
   cursor_x=0
   cursor_y=80
@@ -213,20 +230,72 @@ def gameloop():
       if event.type == pygame.QUIT:
         pygame.quit()
         quit()
-   
-    cursor_x=(cellx())*(cellSide+thickness)
-    cursor_y=((celly())*(cellSide+thickness))+spaceTop
+      
+      if event.type == pygame.MOUSEBUTTONDOWN:
+        
+        dispValue=value(dispStruct1,celly(),cellx())
+        
+        if pygame.mouse.get_pressed()[0]:
+          
+          if dispValue=='untouched':
+            dispStruct1[celly()][cellx()]=realStruct[celly()][cellx()]
+            
+            if value(realStruct,celly(),cellx())==0:
+              blankGroup=[(celly(),cellx())]
+              for i in blanks:
+                if (celly(),cellx()) in i:
+                  blankGroup=i
+                  break
+              for j in blankGroup:
+                dispStruct1[(j[0])][(j[1])]=value(realStruct,j[0],j[1])
+            
+            if value(realStruct,celly(),cellx())=='*':
+              gameDisp.blit(bombImg,(coordx(cellx()),coordy(celly())))
+              bomb()
+        
+        elif pygame.mouse.get_pressed()[2]:
+          
+          if dispValue=='untouched':
+            dispStruct1[celly()][cellx()]='F'
+          
+          elif dispValue=='F':
+            dispStruct1[celly()][cellx()]='untouched'
+    
+    cursor_x=coordx(cellx())
+    cursor_y=coordy(celly())
     
     gameDisp.fill(black)
     gameDisp.blit(logoImg,(((gWidth-logoWidth)/2),0))
     
     pygame.draw.rect(gameDisp,white,[0,spaceTop,gWidth,gHeight])
+    
     for i in range(xVal):
       xBox=(thickness*(i+1))+(cellSide*i)
       for j in range(yVal):
         yBox=(thickness*(j+1))+(cellSide*j)+spaceTop
         
-        pygame.draw.rect(gameDisp,black,[xBox,yBox,cellSide,cellSide])
+        pygame.draw.rect(gameDisp,grey,[xBox,yBox,cellSide,cellSide])
+    
+    counter=0
+    
+    for i in range(xVal):
+      xBox=(thickness*(i+1))+(cellSide*i)
+      for j in range(yVal):
+        yBox=(thickness*(j+1))+(cellSide*j)+spaceTop
+        
+        if value(dispStruct1,j,i)!='untouched':
+          currentImg=imgDict[value(dispStruct1,j,i)]
+          gameDisp.blit(currentImg,(coordx(i),coordy(j)))
+        
+        else:        
+          pygame.draw.rect(gameDisp,grey,[xBox,yBox,cellSide,cellSide])
+        
+        if value(dispStruct1,j,i)=='F':
+          if value(realStruct,j,i)=='*':
+            counter+=1
+            if counter==nBomb:
+              dispStruct1=realStruct
+              gameWin()
     
     cursor(cursor_x,cursor_y)
     
@@ -236,4 +305,3 @@ def gameloop():
 gameloop()
 pygame.quit()
 quit()
-'''
