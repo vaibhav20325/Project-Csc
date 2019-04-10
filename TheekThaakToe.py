@@ -1,7 +1,7 @@
 #Theek Thaak Toe
 import os
 import random
-
+import time
 #Structure
 box1=[['','',''],['','',''],['','','']]
 box2=[['','',''],['','',''],['','','']]
@@ -84,7 +84,6 @@ def oppChar(str):
     for i in ['X','O']:
         if i != str:
             return i
-            break
     
 box_no=4
 num=5
@@ -93,7 +92,8 @@ turn_no=0
 symbol=''
 mode=2
 goodMove=1
-print('Hello','\n','Rules: To play press the key on your num pad corresponding to the box. Win 5 boxes to win ')   
+print('Hello','\n','Rules: To play press the key on your num pad corresponding to the box. Win 5 boxes to win. ')
+print('To end the game at any moment press 0')   
 
 while mode not in [0,1]:
     mode=int(input('Press (0) vs computer, (1) vs player, (2) vs AI: '))
@@ -119,10 +119,26 @@ while True:
     else:
         try:
             num=int(input('Your chance: '))
-        except:
-            print('ERROR')
-            break
+        except ValueError:
+            print('Input not valid ')
+            print('Try Again')
+            continue
             #will end the game if the input is not an integer
+    if num == 0:
+        print('Game Over')
+        sc1,sc2=0,0
+        l=list(scoreCard.values())
+        sc1=l.count(char)
+        sc2=l.count(oppChar(char))
+        if sc1>sc2:
+            print(char, 'won more boxes')
+        elif sc1<sc2:
+            print(oppChar(char), 'won more boxes')
+        else:
+            print('Draw!')
+        time.sleep(3)
+        break
+    
     if num not in range(1,10):
         print('Number not within 1 and 9. Try Again')
         continue
@@ -135,12 +151,13 @@ while True:
     if matrix[box_no][(num-1)//3][(num-1)%3] =='':
         matrix[box_no][(num-1)//3][(num-1)%3]=char
     elif '' not in matrix[box_no][0]+matrix[box_no][1]+matrix[box_no][2]:
-        if list(scoreCard.values()).count(char)>len(scoreCard.values())//2:
+        if list(scoreCard.values()).count(char)>len(list(scoreCard.values()))/2:
             print(char, 'Wins')
-        elif list(scoreCard.values()).count(char)==len(scoreCard.values())//2:
+        elif list(scoreCard.values()).count(char)<len(list(scoreCard.values()))/2:
             print(oppChar(char), 'Wins')
         else:
-            print('Game Tied')
+            print('Draw!')
+        time.sleep(3)
         break
     elif (turn_no%2==0 and mode==0) or mode==1:
         print('Box already occupied')
@@ -155,7 +172,7 @@ while True:
         if list(scoreCard.values()).count(char)==5:
             display()
             print(char,' Wins Congrats')
+            time.sleep(3)
             break
     box_no=num-1
     turn_no+=1
-#credit-Bhavesh Jain
