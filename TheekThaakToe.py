@@ -121,7 +121,6 @@ while True:
             print('Input not valid ')
             print('Try Again')
             continue
-            #will end the game if the input is not an integer
     if num == 0:
         print('Game Over')
         sc1,sc2=0,0
