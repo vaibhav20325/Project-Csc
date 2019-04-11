@@ -92,13 +92,11 @@ turn_no=0
 symbol=''
 mode=2
 goodMove=1
-print('Hello','\n','Rules: To play press the key on your num pad corresponding to the box. Win 5 boxes to win. ')
+print('Hello','\n','Rules: To play press the key on your num pad corresponding to the box. Win more boxes to win. ')
 print('To end the game at any moment press 0')   
 
 while mode not in [0,1]:
-    mode=int(input('Press (0) vs computer, (1) vs player, (2) vs AI: '))
-    if mode==2:
-        print('Still under development')
+    mode=int(input('Press (0) vs computer, (1) vs player: '))
 while symbol not in ['X','O']:
     symbol=input('Enter Symbol (X/O): ').upper()
     
