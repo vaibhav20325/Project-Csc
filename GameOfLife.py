@@ -1,27 +1,32 @@
 #GAME OF LIFE
 import copy
-
+import os
 import pygame
 
 #Display
 BLACK = (0, 0, 0)
 GREY=(50,50,50)
 WHITE = (255, 255, 255)
-WIDTH = 10
-HEIGHT = 10
+WIDTH = 9
+HEIGHT = 9
 MARGIN = 1
 
 pygame.init()
-WINDOW_SIZE = [551, 551]
+WINDOW_SIZE = [501, 501]
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("GameOfLife")
 clock = pygame.time.Clock()
+logo=pygame.image.load(".\logo.png")
+
+
 
 def display():
     screen.fill(GREY)
-    #pygame.draw.rect(screen,(140,140,140),[MARGIN,MARGIN,551-MARGIN,2*HEIGHT+MARGIN])
-    for row in range(0,n):
+
+    screen.blit(logo,(0,0,501,501),(0,0,501,501))
+    
+    for row in range(7,n):
         for column in range(n):
             color = BLACK
             if m[row][column] == 1:
@@ -29,6 +34,7 @@ def display():
             pygame.draw.rect(screen,color,[(MARGIN + WIDTH) * column + MARGIN,(MARGIN + HEIGHT) * row + MARGIN,WIDTH,HEIGHT])
     clock.tick(5) 
     pygame.display.flip()
+
 
 m=[]
 newm=[]
@@ -39,13 +45,6 @@ for n_rows in range(n):
         row_temp.append(0)
     m.append(row_temp)
 
-#Testing
-'''
-m[9][11]=1
-m[10][10]=1
-m[10][11]=1
-m[10][12]=1
-'''
 display()
 running=True
 while running:
@@ -59,6 +58,9 @@ while running:
             row = pos[1] // (HEIGHT + MARGIN)
             m[row][column] = 1
             display()
+        elif event.type==pygame.QUIT:
+            running=False
+            quit()
 def check_n(x,y):
     global m
     global new_m
@@ -74,7 +76,7 @@ def check_n(x,y):
         pass
     elif sum_n==3:
         new_m[x][y]=1
-    elif sum_n>3:
+    else:
         new_m[x][y]=0
 
 
@@ -85,9 +87,3 @@ for i in range(120):
                 check_n(i,j)
         m=new_m
         display()
-'''
-        Try Glider
-            $$$
-            $
-             $
-'''
