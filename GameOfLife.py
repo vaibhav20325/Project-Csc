@@ -20,12 +20,6 @@ clock = pygame.time.Clock()
 
 def display():
     screen.fill(GREY)
-    '''
-    font = pygame.font.Font('freesansbold.ttf', 2*HEIGHT)
-    text = font.render('GAME OF LIFE', True, WHITE, BLACK)
-    textRect = text.get_rect()
-    textRect.center = (551// 2, 10)
-    '''
     #pygame.draw.rect(screen,(140,140,140),[MARGIN,MARGIN,551-MARGIN,2*HEIGHT+MARGIN])
     for row in range(0,n):
         for column in range(n):
