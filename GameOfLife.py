@@ -84,3 +84,11 @@ for i in range(120):
                 check_n(i,j)
         m=new_m
         display()
+        
+        
+        '''
+        Try Glider
+            $$$
+            $
+             $
+        '''
