@@ -20,7 +20,14 @@ clock = pygame.time.Clock()
 
 def display():
     screen.fill(GREY)
-    for row in range(n):
+    '''
+    font = pygame.font.Font('freesansbold.ttf', 2*HEIGHT)
+    text = font.render('GAME OF LIFE', True, WHITE, BLACK)
+    textRect = text.get_rect()
+    textRect.center = (551// 2, 10)
+    '''
+    #pygame.draw.rect(screen,(140,140,140),[MARGIN,MARGIN,551-MARGIN,2*HEIGHT+MARGIN])
+    for row in range(0,n):
         for column in range(n):
             color = BLACK
             if m[row][column] == 1:
@@ -76,7 +83,7 @@ def check_n(x,y):
     elif sum_n>3:
         new_m[x][y]=0
 
-running=True
+
 for i in range(120):
         new_m=copy.deepcopy(m)
         for i in range(n):
@@ -84,11 +91,9 @@ for i in range(120):
                 check_n(i,j)
         m=new_m
         display()
-        
-        
-        '''
+'''
         Try Glider
             $$$
             $
              $
-        '''
+'''
