@@ -51,7 +51,7 @@ running=True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key== pygame.K_ESCAPE:
+            if event.key== pygame.K_RETURN:
                 running=False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
